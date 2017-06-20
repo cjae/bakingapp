@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="insets">5dp</dimen>
+    <dimen name="baking_card_size">200dp</dimen>
+</resources>
