@@ -1,23 +1,20 @@
 package com.dreammesh.app.bakingapp.ui.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.dreammesh.app.bakingapp.R;
-import com.dreammesh.app.bakingapp.data.model.BakingWrapper;
 import com.dreammesh.app.bakingapp.data.model.Step;
-import com.dreammesh.app.bakingapp.ui.fragment.RecipeFragment;
 import com.dreammesh.app.bakingapp.ui.fragment.RecipeStepFragment;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 
-import static com.dreammesh.app.bakingapp.util.CommonUtil.RECIPE_KEY;
-import static com.dreammesh.app.bakingapp.util.CommonUtil.RECIPE_STEP_ITEM_KEY;
+import static com.dreammesh.app.bakingapp.util.CommonUtil.RECIPE_STEP_ID_KEY;
+import static com.dreammesh.app.bakingapp.util.CommonUtil.RECIPE_STEP_LIST_KEY;
 
 public class RecipeStepActivity extends AppCompatActivity {
 
@@ -33,16 +30,17 @@ public class RecipeStepActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        setUpViews();
-    }
+        if(savedInstanceState == null) {
+            List<Step> stepList = getIntent().getParcelableArrayListExtra(RECIPE_STEP_LIST_KEY);
+            int currentStep = getIntent().getIntExtra(RECIPE_STEP_ID_KEY, 0);
 
-    private void setUpViews() {
-        Step step = getIntent().getParcelableExtra(RECIPE_STEP_ITEM_KEY);
-
-        RecipeStepFragment recipeFragment = RecipeStepFragment.newInstance(step);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.step_container, recipeFragment)
-                .commit();
+            RecipeStepFragment recipeFragment = RecipeStepFragment.newInstance();
+            recipeFragment.setCurrentStep(currentStep);
+            recipeFragment.setStepList(stepList);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.step_container, recipeFragment)
+                    .commit();
+        }
     }
 
     @Override

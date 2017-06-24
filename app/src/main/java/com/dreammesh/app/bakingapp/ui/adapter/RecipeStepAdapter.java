@@ -53,6 +53,10 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
         holder.bindTo(step, position);
     }
 
+    public void setCurrentPos(int position) {
+        currentPos = position;
+    }
+
     @Override
     public int getItemCount() {
         return data.size();
@@ -91,7 +95,7 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
             currentId = step.getId();
 
             String description = step.getShortDescription();
-            stepDescription.setText(String.format(mContext.getString(R.string.step_format), currentId + 1, description));
+            stepDescription.setText(String.format(mContext.getString(R.string.step_format), currentId, description));
 
             String video = step.getVideoURL();
 

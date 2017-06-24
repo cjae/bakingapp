@@ -13,14 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dreammesh.app.bakingapp.R;
 import com.dreammesh.app.bakingapp.data.model.BakingWrapper;
 import com.dreammesh.app.bakingapp.data.model.Ingredient;
 import com.dreammesh.app.bakingapp.data.model.Step;
 import com.dreammesh.app.bakingapp.ui.adapter.RecipeStepAdapter;
+import com.dreammesh.app.bakingapp.util.CommonUtil;
 import com.dreammesh.app.bakingapp.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindString;
@@ -36,18 +39,25 @@ import static com.dreammesh.app.bakingapp.util.CommonUtil.RECIPE_KEY;
 public class RecipeFragment extends Fragment implements
         RecipeStepAdapter.OnStepClickListener {
 
+    // Final Strings to store state information about the list of steps and list index
+    public static final String STEP_ID_LIST = "stepList";
+    public static final String INGREDIENTS_ID_LIST = "ingredientList";
+    public static final String LIST_INDEX = "list_index";
+
     @BindView(R.id.recipe_ingredients)
     TextView recipeIngredientsTv;
 
     @BindView(R.id.recipe_steps)
     RecyclerView recipeStepsRv;
 
-    BakingWrapper recipe;
+    private List<Step> stepList;
+    private List<Ingredient> ingredientList;
+    private int currentStep;
 
     OnRecipeStepClickListener mCallback;
 
     public interface OnRecipeStepClickListener {
-        void onRecipeStepSelected(Step step);
+        void onRecipeStepSelected(int step_id);
     }
 
     @Override
@@ -76,6 +86,12 @@ public class RecipeFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if(savedInstanceState != null) {
+            stepList = savedInstanceState.getParcelableArrayList(STEP_ID_LIST);
+            ingredientList = savedInstanceState.getParcelableArrayList(INGREDIENTS_ID_LIST);
+            currentStep = savedInstanceState.getInt(LIST_INDEX);
+        }
+
         View view = inflater.inflate(R.layout.fragment_recipe, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -83,31 +99,14 @@ public class RecipeFragment extends Fragment implements
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        recipe = getArguments().getParcelable(RECIPE_FRAGMENT_KEY);
+        recipeIngredientsTv.setText(CommonUtil.getStringIngredients(getActivity(), ingredientList));
 
-        StringBuilder sb = new StringBuilder();
-
-        if (recipe != null) {
-            for (Ingredient ingredient : recipe.getIngredients()) {
-
-                String name = ingredient.getIngredient();
-                float quantity = ingredient.getQuantity();
-                String measure = ingredient.getMeasure();
-
-                sb.append("\n");
-                sb.append(StringUtil.prepareIngredient(getContext(), name, quantity, measure));
-            }
-        }
-
-        recipeIngredientsTv.setText(sb.toString().trim());
-
-        if (recipe != null) {
-            doInitRecycler(recipe.getSteps());
-        }
+        doInitRecycler();
     }
 
-    private void doInitRecycler(List<Step> steps) {
-        RecipeStepAdapter adapter = new RecipeStepAdapter(getContext(), steps, this);
+    private void doInitRecycler() {
+        RecipeStepAdapter adapter = new RecipeStepAdapter(getContext(), stepList, this);
+        adapter.setCurrentPos(currentStep);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recipeStepsRv.setLayoutManager(layoutManager);
@@ -120,6 +119,26 @@ public class RecipeFragment extends Fragment implements
 
     @Override
     public void stepClicked(int stepId) {
-        mCallback.onRecipeStepSelected(recipe.getSteps().get(stepId));
+        currentStep = stepId;
+        mCallback.onRecipeStepSelected(stepId);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle currentState) {
+        currentState.putParcelableArrayList(STEP_ID_LIST, (ArrayList<Step>) stepList);
+        currentState.putParcelableArrayList(INGREDIENTS_ID_LIST, (ArrayList<Ingredient>) ingredientList);
+        currentState.putInt(LIST_INDEX, currentStep);
+    }
+
+    public void setCurrentStep(int currentStep) {
+        this.currentStep = currentStep;
+    }
+
+    public void setStepList(List<Step> stepList) {
+        this.stepList = stepList;
+    }
+
+    public void setIngredientList(List<Ingredient> ingredientList) {
+        this.ingredientList = ingredientList;
     }
 }

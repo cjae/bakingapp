@@ -21,7 +21,17 @@
     <xliff:g id="bullet">\u2022</xliff:g> <xliff:g id="name">%s</xliff:g>
     (<xliff:g id="quantity">%s</xliff:g> <xliff:g id="measure">%s</xliff:g>)
     </string>
+
     <string name="ingredients_list">Ingredients list:</string>
     <string name="title_activity_recipe_step">Current Step</string>
     <string name="step_format">%1$d. %2$s</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+
+    <!-- Widget Details -->
+    <string name="appwidget_text">LAST VIEWED RECIPE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_name_widgets">Last viewed baking recipe</string>
+    <string name="step_desc">Step description</string>
+    <string name="no_view_recipe">No viewed recipe</string>
 </resources>

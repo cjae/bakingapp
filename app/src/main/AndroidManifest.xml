@@ -22,6 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.activity.RecipeActivity"
             android:label="@string/title_activity_recipe"
@@ -29,7 +30,17 @@
         <activity
             android:name=".ui.activity.RecipeStepActivity"
             android:label="@string/title_activity_recipe_step"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <receiver android:name=".ui.widget.RecipeWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_widget_provider_info" />
+        </receiver>
     </application>
 
 </manifest>

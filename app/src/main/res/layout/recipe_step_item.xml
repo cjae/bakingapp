@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="15dp"
+    android:padding="@dimen/hd_fifteen_dp"
     android:background="@color/app_white"
     tools:ignore="UseCompoundDrawables">
 
@@ -14,17 +14,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:textSize="14sp"
+        android:textSize="@dimen/hd_fouteen_sp"
         android:textColor="@color/colorPrimary"
         tools:ignore="RelativeOverlap"
         tools:text="Recipe Introduction"/>
 
     <ImageView
         android:id="@+id/goto_step_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="@dimen/goto_icon"
+        android:layout_height="@dimen/goto_icon"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:tint="@color/grey_400"
         app:srcCompat="@drawable/ic_keyboard_arrow_right_black_24dp"
