@@ -50,7 +50,7 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
     public void onBindViewHolder(RecipeStepViewHolder holder, int position) {
         Step step = data.get(position);
 
-        holder.bindTo(step, position);
+        holder.bind(step, position);
     }
 
     public void setCurrentPos(int position) {
@@ -90,7 +90,11 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
             itemView.setOnClickListener(this);
         }
 
-        void bindTo(@NonNull Step step, int bindPosition) {
+        /*
+        Adopted from: https://github.com/djkovrik/BakingApp/blob/master/app/src/main/java/com/
+        sedsoftware/bakingapp/features/recipedetails/RecipeDetailsAdapter.java
+         */
+        void bind(Step step, int bindPosition) {
 
             currentId = step.getId();
 
