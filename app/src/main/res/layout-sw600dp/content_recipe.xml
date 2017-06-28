@@ -18,11 +18,6 @@
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_recipe" />
 
-    <View
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:background="@android:color/darker_gray" />
-
     <FrameLayout
         android:id="@+id/step_container"
         android:layout_width="0dp"

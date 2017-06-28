@@ -5,8 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="none"
+    android:fillViewport="true"
     android:id="@+id/nestedScrollView"
     android:background="@color/app_white_smoke"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.dreammesh.app.bakingapp.ui.fragment.RecipeFragment"
     tools:showIn="@layout/activity_recipe">
 
