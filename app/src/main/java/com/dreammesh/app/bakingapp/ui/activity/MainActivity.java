@@ -1,5 +1,6 @@
 package com.dreammesh.app.bakingapp.ui.activity;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.dreammesh.app.bakingapp.data.rest.APIClient;
 import com.dreammesh.app.bakingapp.data.rest.ServiceGenerator;
 import com.dreammesh.app.bakingapp.ui.adapter.BakingRecyclerAdapter;
 import com.dreammesh.app.bakingapp.ui.custom.RecyclerInsetsDecoration;
+import com.dreammesh.app.bakingapp.ui.widget.RecipeWidgetProvider;
 import com.dreammesh.app.bakingapp.util.CommonUtil;
 import com.dreammesh.app.bakingapp.util.PrefManager;
 import com.google.gson.Gson;
@@ -201,14 +203,24 @@ public class MainActivity extends AppCompatActivity implements
         Intent intent = new Intent(this, RecipeActivity.class);
 
         BakingWrapper bakingWrapper = data.get(position);
-        doAddRecipeToDb(bakingWrapper);
+        doAddRecipeTosharedPreference(bakingWrapper);
         intent.putExtra(RECIPE_KEY, bakingWrapper);
 
         startActivity(intent);
     }
 
-    private void doAddRecipeToDb(BakingWrapper bakingWrapper) {
+    private void doAddRecipeTosharedPreference(BakingWrapper bakingWrapper) {
         String json = new Gson().toJson(bakingWrapper);
         PrefManager.setSavedRecipe(this, json);
+
+        Intent intent = new Intent(this, RecipeWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+        // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
+        // since it seems the onUpdate() is only fired on that:
+        int[] ids = {R.xml.recipe_widget_provider_info};
+
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 }

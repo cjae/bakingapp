@@ -96,7 +96,7 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
          */
         void bind(Step step, int bindPosition) {
 
-            currentId = step.getId();
+            currentId = getAdapterPosition();
 
             String description = step.getShortDescription();
             stepDescription.setText(String.format(mContext.getString(R.string.step_format), currentId, description));
@@ -121,7 +121,7 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
         @Override
         public void onClick(View view) {
             currentPos = currentId;
-            recipeClickListener.stepClicked(currentId);
+            recipeClickListener.stepClicked(getAdapterPosition());
             notifyDataSetChanged();
         }
     }

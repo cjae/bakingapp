@@ -47,21 +47,27 @@ public class BakingRecyclerAdapter extends RecyclerView.Adapter<BakingRecyclerAd
         String servings = String.format(context.getString(R.string.servings_format), item.getServings());
         holder.itemServings.setText(servings);
 
+        int errorDrawable = 0;
         if(item.getId() == 1) {
-            Picasso.with(context)
-                    .load(R.drawable.pic2)
-                    .into(holder.itemBg);
+            errorDrawable = R.drawable.pic2;
         } else if(item.getId() == 2) {
-            Picasso.with(context)
-                    .load(R.drawable.pic3)
-                    .into(holder.itemBg);
+            errorDrawable = R.drawable.pic3;
         } else if(item.getId() == 3) {
-            Picasso.with(context)
-                    .load(R.drawable.pic)
-                    .into(holder.itemBg);
+            errorDrawable = R.drawable.pic;
         } else if(item.getId() == 4) {
+            errorDrawable = R.drawable.cheese;
+        } else {
+            errorDrawable = R.drawable.recipe_placeholder;
+        }
+
+        if(item.getImage().isEmpty()) {
             Picasso.with(context)
-                    .load(R.drawable.cheese)
+                    .load(errorDrawable)
+                    .into(holder.itemBg);
+        } else {
+            Picasso.with(context)
+                    .load(item.getImage())
+                    .error(errorDrawable)
                     .into(holder.itemBg);
         }
     }

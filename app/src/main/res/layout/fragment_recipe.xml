@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="none"
+    android:id="@+id/nestedScrollView"
     android:background="@color/app_white_smoke"
     tools:context="com.dreammesh.app.bakingapp.ui.fragment.RecipeFragment"
     tools:showIn="@layout/activity_recipe">
@@ -29,7 +30,6 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:padding="@dimen/hd_ten_dp">
 

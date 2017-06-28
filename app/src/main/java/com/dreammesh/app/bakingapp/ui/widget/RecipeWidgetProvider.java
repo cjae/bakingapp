@@ -2,7 +2,10 @@ package com.dreammesh.app.bakingapp.ui.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import com.dreammesh.app.bakingapp.R;
@@ -61,5 +64,23 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+
+        if(AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())){
+
+            Bundle extras = intent.getExtras();
+            if(extras != null) {
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                ComponentName thisAppWidget = new ComponentName(context.getPackageName(),
+                        RecipeWidgetProvider.class.getName());
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
+
+                onUpdate(context, appWidgetManager, appWidgetIds);
+            }
+        }
     }
 }

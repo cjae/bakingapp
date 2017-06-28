@@ -1,16 +1,20 @@
 package com.dreammesh.app.bakingapp.ui.fragment;
 
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dreammesh.app.bakingapp.R;
@@ -31,6 +35,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +59,9 @@ public class RecipeStepFragment extends Fragment implements
 
     @BindView(R.id.recipe_step_desc_card)
     CardView descriptionCard;
+
+    @BindView(R.id.recipe_step_image)
+    ImageView recipeStepImage;
 
     @BindView(R.id.recipe_step_desc)
     TextView recipeStepDesc;
@@ -109,8 +117,19 @@ public class RecipeStepFragment extends Fragment implements
     private void setUpViews(Step step) {
         recipeStepDesc.setText(step.getDescription());
 
-        String videoUrl = step.getVideoURL();
+        String imageUrl = step.getThumbnailURL();
+        setUpImageView(imageUrl);
 
+        String videoUrl = step.getVideoURL();
+        setUpVideoView(videoUrl);
+
+        if(isTablet) {
+            setViewVisibility(nextBtn, false);
+            setViewVisibility(previousBtn, false);
+        }
+    }
+
+    private void setUpVideoView(String videoUrl) {
         if (videoUrl != null && !videoUrl.isEmpty()) {
 
             // Init and show video view
@@ -129,10 +148,18 @@ public class RecipeStepFragment extends Fragment implements
             // Hide video view
             setViewVisibility(exoPlayerView, false);
         }
+    }
 
-        if(isTablet) {
-            setViewVisibility(nextBtn, false);
-            setViewVisibility(previousBtn, false);
+    private void setUpImageView(String imageUrl) {
+        if(imageUrl.isEmpty()) {
+            Picasso.with(getActivity())
+                    .load(R.drawable.recipe_placeholder)
+                    .into(recipeStepImage);
+        } else {
+            Picasso.with(getActivity())
+                    .load(imageUrl)
+                    .error(R.drawable.recipe_placeholder)
+                    .into(recipeStepImage);
         }
     }
 
@@ -190,6 +217,10 @@ public class RecipeStepFragment extends Fragment implements
 
     // Src: https://developer.android.com/training/system-ui/immersive.html
     private void hideSystemUI() {
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.hide();
+        }
         getActivity().getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -226,7 +257,7 @@ public class RecipeStepFragment extends Fragment implements
 
     @OnClick(R.id.next_step_btn)
     void doNextStep() {
-        if (currentStep == stepList.size()-1) {
+        if (currentStep == stepList.size() - 1) {
             if (nextBtn.isEnabled()) nextBtn.setEnabled(false);
         } else {
             currentStep++;

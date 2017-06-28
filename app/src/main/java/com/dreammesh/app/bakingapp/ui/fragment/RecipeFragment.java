@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +44,10 @@ public class RecipeFragment extends Fragment implements
     public static final String STEP_ID_LIST = "stepList";
     public static final String INGREDIENTS_ID_LIST = "ingredientList";
     public static final String LIST_INDEX = "list_index";
+    public static final String RECIPE_SCROLL_POSITION = "scroll_position";
+
+    @BindView(R.id.nestedScrollView)
+    NestedScrollView nestedScrollView;
 
     @BindView(R.id.recipe_ingredients)
     TextView recipeIngredientsTv;
@@ -55,6 +60,7 @@ public class RecipeFragment extends Fragment implements
     private int currentStep;
 
     OnRecipeStepClickListener mCallback;
+    private int[] scrollPosition;
 
     public interface OnRecipeStepClickListener {
         void onRecipeStepSelected(int step_id);
@@ -90,6 +96,8 @@ public class RecipeFragment extends Fragment implements
             stepList = savedInstanceState.getParcelableArrayList(STEP_ID_LIST);
             ingredientList = savedInstanceState.getParcelableArrayList(INGREDIENTS_ID_LIST);
             currentStep = savedInstanceState.getInt(LIST_INDEX);
+
+            scrollPosition = savedInstanceState.getIntArray(RECIPE_SCROLL_POSITION);
         }
 
         View view = inflater.inflate(R.layout.fragment_recipe, container, false);
@@ -115,6 +123,13 @@ public class RecipeFragment extends Fragment implements
         recipeStepsRv.setAdapter(adapter);
         recipeStepsRv
                 .addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+        if(scrollPosition != null)
+            nestedScrollView.post(new Runnable() {
+                public void run() {
+                    nestedScrollView.scrollTo(scrollPosition[0], scrollPosition[1]);
+                }
+            });
     }
 
     @Override
@@ -128,6 +143,9 @@ public class RecipeFragment extends Fragment implements
         currentState.putParcelableArrayList(STEP_ID_LIST, (ArrayList<Step>) stepList);
         currentState.putParcelableArrayList(INGREDIENTS_ID_LIST, (ArrayList<Ingredient>) ingredientList);
         currentState.putInt(LIST_INDEX, currentStep);
+
+        currentState.putIntArray(RECIPE_SCROLL_POSITION,
+                new int[]{ nestedScrollView.getScrollX(), nestedScrollView.getScrollY()});
     }
 
     public void setCurrentStep(int currentStep) {
